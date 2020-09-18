@@ -1,43 +1,50 @@
 package com.example.demo.entities;
-
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+
 @Entity
-public class Driver {
+public class Customer{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(unique = true)
-    @NotBlank(message = "email is required")
+    @Email(message = "email is required")
     private String email;
 
     @NotBlank(message = "fullname is required")
     private String fullname;
-
     @NotNull(message = "mobile is required")
     private int mobile;
-
-    @NotBlank(message = "password is required")
+    @NotNull(message = "password is required")
     private String password;
 
     private Date createdAt;
     private Date updatedAt;
 
-//  OneToMany with Parcel
-    @OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER, mappedBy = "driver", orphanRemoval = true)
+//    //OneToMany with Parcel
+    @OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER, mappedBy = "customer", orphanRemoval = true)
     private List<Parcel> parcels = new ArrayList<>();
 
 
-    public Driver() {
+    public Customer() {
     }
 
+    public List<Parcel> getParcels() {
+        return parcels;
+    }
+
+    public void setParcels(List<Parcel> parcels) {
+        this.parcels = parcels;
+    }
 
     public Long getId() {
         return id;
@@ -95,14 +102,6 @@ public class Driver {
         this.updatedAt = updatedAt;
     }
 
-    public List<Parcel> getParcels() {
-        return parcels;
-    }
-
-    public void setParcels(List<Parcel> parcels) {
-        this.parcels = parcels;
-    }
-
     @PrePersist
     protected void onCreate() {
         this.createdAt = new Date();
@@ -112,7 +111,6 @@ public class Driver {
     protected void onUpdate() {
         this.updatedAt = new Date();
     }
-
 
 
 }
